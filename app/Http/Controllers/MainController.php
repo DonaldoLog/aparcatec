@@ -10,7 +10,7 @@ class MainController extends Controller
 {
     public function index()
     {
-        $usuarios = User::all();
+        $usuarios = User::all()->toArray();
         return response()->json($usuarios);
     }
     public function store(Request $request)
