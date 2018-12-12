@@ -33,17 +33,22 @@ class MainController extends Controller
     public function login(Request $request)
     {
         $contraseña =  $request->contraseña;
-        $user = User::where('correo',$request->correo)
-        ->where('estado',1)->first();
+        $user = User::where('correo',$request->correo)->first();
         if($user){
-            if ($user && Hash::check($contraseña, $user->contrasena)) {
-                return response()->json(['success'=>1]);
+            $user = User::where('correo',$request->correo) ->where('estado',1)->first();
+            if($user){
+                if ($user && Hash::check($contraseña, $user->contrasena)) {
+                    return response()->json(['success'=>1]);
+                }
+                return response()->json(['success'=>3]); 
+    
+            }else{
+                return response()->json(['success'=>2]); 
             }
-            return response()->json(['success'=>0]); 
-
         }else{
             return response()->json(['success'=>0]); 
         }
+        
     }
 
     public function aceptar(Request $request)
