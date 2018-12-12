@@ -27,7 +27,7 @@ class MainController extends Controller
         $usuario->placa = $request->placa;
 
         $usuario->save();
-        return response()->json(1);
+        return response()->json(['success'=>1]);
     }
 
     public function login(Request $request)
@@ -37,12 +37,12 @@ class MainController extends Controller
         ->where('estado',1)->first();
         if($user){
             if ($user && Hash::check($contraseña, $user->contrasena)) {
-                return response()->json(1);
+                return response()->json(['success'=>1]);
             }
-            return response()->json(0); 
+            return response()->json(['success'=>0]); 
 
         }else{
-            return response()->json(0); 
+            return response()->json(['success'=>0]); 
         }
     }
 
@@ -53,7 +53,7 @@ class MainController extends Controller
             $usuario->estado = 1;
         }
         $usuario->save();
-        return response()->json(1);
+        return response()->json(['success'=>1]);
     }
 
     public function rechazar(Request $request)
@@ -63,7 +63,7 @@ class MainController extends Controller
             $usuario->estado = 0;
         }
         $usuario->save();
-        return response()->json(1);
+        return response()->json(['success'=>1]);
     }
     
 }
