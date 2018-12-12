@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use Hash;
+
 class MainController extends Controller
 {
     public function index()
@@ -17,7 +19,7 @@ class MainController extends Controller
         $usuario->nombre = $request->nombre;
         $usuario->correo = $request->correo;
         $contraseña =  $request->contraseña;
-        $contraseña = password_hash($contraseña, PASSWORD_DEFAULT);
+        $contraseña = bcrypt($contraseña);
         $usuario->contrasena = $contraseña;
         $usuario->modelo = $request->modelo;
         $usuario->marca = $request->marca;
@@ -31,12 +33,14 @@ class MainController extends Controller
     public function login(Request $request)
     {
         $contraseña =  $request->contraseña;
-        $contraseña = password_hash($contraseña, PASSWORD_DEFAULT);
-
-        $user = User::where('correo',$request->correo)->where('contrasena',
-        $contraseña)->where('estado',1)->first();
+        $user = User::where('correo',$request->correo)
+        ->where('estado',1)->first();
         if($user){
-            return response()->json(1);
+            if ($user && Hash::check($contraseña, $user->contrasena)) {
+                return response()->json(1);
+            }
+            return response()->json(0); 
+
         }else{
             return response()->json(0); 
         }
